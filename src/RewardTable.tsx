@@ -50,13 +50,14 @@ const RewardTable = () => {
         setloading(false)
     }
 
-    const clearHTMLrewardForm = () => {
+    const resetRewardState = () => {
         const htmlRewrdBody: any = document.getElementById('reward-body');
+        setcsvContent([]);
         htmlRewrdBody.innerHTML = ''
     }
     const fetchRewards = async () => {
         const connection = await new Connection(clusterApiUrl('mainnet-beta'))
-        clearHTMLrewardForm()
+        resetRewardState()
         const htmlRewrdBody: any = document.getElementById('reward-body');
         const csvObj: any = []
         try {
@@ -109,9 +110,9 @@ const RewardTable = () => {
 
                 </tbody>
             </table>
-            {loading && <span>fetching data...</span>}<br/>
+            {loading && <span>fetching data...</span>}
             {csvContent.length > 0 &&
-                <CSVLink {...csvReport}>Export to CSV</CSVLink>
+                <CSVLink style={{position:'fixed',bottom:'50px'}} className="btn btn-success" {...csvReport}>Export to CSV</CSVLink>
             }
         </div>
     )
