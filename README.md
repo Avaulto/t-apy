@@ -1,9 +1,7 @@
-# solana validator reward tool
+# solana tools
 
-this app take 3 argument.
-vote account, start epoch, end epoch.
-and return a list of reward with sol prices relative to epoch unixtime
- 
+this tool aims to deliver various type features related to Solana blockchain 
+
 ## use guide
 
 ### `git glone https://github.com/avaulto/solana-validator-tools.git`

@@ -1,12 +1,55 @@
-.App {
-  text-align: center;
+#root{
+  background-image: url('./assets/bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
 
+#fetch-btn{
+  background-image: url('./assets/btn-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: capitalize;
+  opacity: 0.9;
+  transition: 0.3s ease;
+}
+#fetch-btn:hover{
+  opacity: 1;
+}
+.App {
+  text-align: center;
+  width: 900px;
+    margin: 0 auto;
+}
+#table-title {
+  font-size: 40px;
+  text-transform: capitalize;
+  margin-bottom: 20px;
+  display: block;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
-
+#love{
+  position: fixed;
+  color: white;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    text-transform: uppercase;
+}
+#love a{
+  display: block;
+}
+#love img{
+  width: 50px;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Connection, clusterApiUrl, PublicKey, InflationReward } from '@solana/web3.js'
 import 'bootstrap/dist/css/bootstrap.css';
 import { CSVLink } from "react-csv";
@@ -11,6 +11,19 @@ const RewardTable = () => {
     const [startEpoch, setstartEpoch] = useState('')
     const [endEpoch, setendEpoch] = useState('')
     const [csvContent, setcsvContent] = useState([])
+    const [currentEpoch, setcurrentEpoch] = useState(0)
+
+    useEffect(() => {
+        new Connection(clusterApiUrl('mainnet-beta')).getEpochInfo().then(res => {
+            console.log(res)
+            setcurrentEpoch(res.epoch)
+        })
+
+
+        return () => {
+
+        }
+    }, [])
 
     const headers = [
         { label: "epoch", key: "epoch" },
@@ -91,10 +104,10 @@ const RewardTable = () => {
     return (
         <div>
             <div className="input-group">
-                <input id='VA' onChange={e => setvoteAccount(e.target.value)} className="form-control" placeholder='vote account' />
+                <input id='VA' onChange={e => setvoteAccount(e.target.value)} className="form-control" placeholder='vote/stake account' />
                 <input id='SE' onChange={e => setstartEpoch(e.target.value)} className="form-control" placeholder='start epoch' />
-                <input id='EE' onChange={e => setendEpoch(e.target.value)} className="form-control" placeholder='end epoch' />
-                <button type="button" onClick={fetchRewards} className="btn btn-primary">fetch reward</button>
+                <input id='EE' onChange={e => setendEpoch(e.target.value)} className="form-control" placeholder={'last epoch (' + currentEpoch + ')'} />
+                <button type="button" onClick={fetchRewards} id='fetch-btn' className="btn">fetch reward</button>
             </div>
             <table className="table">
                 <thead>
@@ -110,10 +123,17 @@ const RewardTable = () => {
 
                 </tbody>
             </table>
-            {loading && <span>fetching data...</span>}
-            {csvContent.length > 0 &&
-                <CSVLink style={{position:'fixed',bottom:'50px'}} className="btn btn-success" {...csvReport}>Export to CSV</CSVLink>
-            }
+                {loading && <span>fetching data...</span>}
+            <div id="csv-wrap">
+
+                <CSVLink onClick={(event: any) => {
+                    if (csvContent.length == 0) {
+
+                        return false; // 👍🏻 You are stopping the handling of component
+                    }
+                }} style={{color:'white', backgroundColor: csvContent.length > 0 ? '#42d4ca' : 'gray' }} className="btn csv-btn" {...csvReport}>Export to CSV</CSVLink>
+
+            </div>
         </div>
     )
 }
