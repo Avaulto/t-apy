@@ -3,26 +3,24 @@ import { Connection, clusterApiUrl, PublicKey, InflationReward } from '@solana/w
 import 'bootstrap/dist/css/bootstrap.css';
 import { CSVLink } from "react-csv";
 
+import SearchBox from './SearchBox';
+import RewardBox from './RewardBox';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const RewardTable = () => {
-
+    const notify = () => toast("no info on given epoch!");
     const [loading, setloading] = useState(false)
-    const [voteAccount, setvoteAccount] = useState('')
-    const [startEpoch, setstartEpoch] = useState('')
-    const [endEpoch, setendEpoch] = useState('')
     const [csvContent, setcsvContent] = useState([])
     const [currentEpoch, setcurrentEpoch] = useState(0)
+    const [rewards, setrewards]: Array<any> = useState([])
 
     useEffect(() => {
         new Connection(clusterApiUrl('mainnet-beta')).getEpochInfo().then(res => {
-            console.log(res)
             setcurrentEpoch(res.epoch)
         })
-
-
-        return () => {
-
-        }
     }, [])
 
     const headers = [
@@ -49,29 +47,25 @@ const RewardTable = () => {
         const solPrice = await reqSolPrice.json()
         return solPrice.market_data.current_price.usd.toFixed(2)
     }
-    const buildForm = async (reward: any) => {
-        const htmlRewrdBody: any = document.getElementById('reward-body');
 
-        const tr = `<tr>
-            <th>${reward.epoch}</th>
-            <th>${reward.effectiveSlot}</th>
-            <th>${reward.amount / 1000000000}</th>
-            <th>${reward.date}</th>
-            <th>${reward.solPrice}</th>
-            </tr>`
-        htmlRewrdBody.innerHTML += tr;
-        setloading(false)
+
+    const calcAPY = (reward: any) => {
+        const epochAPY = isWhatPercentOf(reward.amount, reward.postBalance)
+        const averageEpoch = 2.58 // days;
+        const trueAPY = epochAPY / averageEpoch * 365;
+        return trueAPY.toFixed(2)
     }
 
+    function isWhatPercentOf(numA: number, numB: number): number {
+        return (numA / numB) * 100;
+    }
     const resetRewardState = () => {
-        const htmlRewrdBody: any = document.getElementById('reward-body');
         setcsvContent([]);
-        htmlRewrdBody.innerHTML = ''
+        setrewards([]);
     }
-    const fetchRewards = async () => {
+    const fetchRewards = async (voteAccount: string, startEpoch: number, endEpoch: number) => {
         const connection = await new Connection(clusterApiUrl('mainnet-beta'))
         resetRewardState()
-        const htmlRewrdBody: any = document.getElementById('reward-body');
         const csvObj: any = []
         try {
             const voteAcc = new PublicKey(voteAccount)
@@ -80,60 +74,65 @@ const RewardTable = () => {
             for (let index = Number(startEpoch); index <= Number(endEpoch); index++) {
                 setloading(true)
                 const epoch = index;
-                const rewardRes: (InflationReward | null)[] = await connection.getInflationReward([voteAcc], epoch)
-                await sleep(800)
+                const rewardRes: (InflationReward | null)[] = await connection.getInflationReward([voteAcc], epoch);
+                await sleep(600)
                 const reward: any = rewardRes[0];
                 // get date
                 const unixTimestamp: any = await connection.getBlockTime(reward.effectiveSlot)
                 const date = new Date(unixTimestamp * 1000)
                 const dateObject = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear()
                 reward.date = dateObject
-
+                reward.postBalance = (reward.postBalance / 1000000000).toFixed(2)
+                reward.amount = (reward.amount / 1000000000).toFixed(2)
+                reward.APY = calcAPY(reward);
                 // get price
                 const solPrice = await fetchSolPrice(reward.date)
                 reward.solPrice = solPrice;
                 csvObj.push(reward)
-                buildForm(reward)
+                // buildForm(reward)
+                setrewards((rewards:any) => [...rewards,reward])
+                console.log(rewards.length)
+                setloading(false)
             }
             setcsvContent(csvObj);
 
         } catch (error) {
-            alert(error)
+            // alert(error + '-----> no result for this epoch')
+            notify()
+            setloading(false)
         }
     }
     return (
         <div>
-            <div className="input-group">
-                <input id='VA' onChange={e => setvoteAccount(e.target.value)} className="form-control" placeholder='vote/stake account' />
-                <input id='SE' onChange={e => setstartEpoch(e.target.value)} className="form-control" placeholder='start epoch' />
-                <input id='EE' onChange={e => setendEpoch(e.target.value)} className="form-control" placeholder={'last epoch (' + currentEpoch + ')'} />
-                <button type="button" onClick={fetchRewards} id='fetch-btn' className="btn">fetch reward</button>
+                  
+        <span id="table-title"> SOL reward history</span>
+       <div id='sub-title'>current epoch: {currentEpoch}</div>
+        
+        
+        <div id='rewards-data' style={{ display: 'flex' }}>
+
+            <SearchBox currentEpoch={currentEpoch} fetchRewards={fetchRewards} />
+            <div id='reward-box' style={{ flex: 2, padding: '0 20px' , maxHeight:'650px', overflow:'scroll'}}>
+                {rewards.length > 0 && <h4 style={{textAlign: 'left'}}>Rewards info</h4>}
+                {rewards.map((reward:any, i: number) => (
+                   <RewardBox reward={reward} key={i} />
+                ))}
+                <ToastContainer />
+                {/* <RewardBox reward={rewards[0]}/> */}
+                {loading && <div className='loader'></div>}
+                {rewards.length > 0 &&<div id="csv-wrap">
+
+                    <CSVLink onClick={(event: any) => {
+                        if (csvContent.length == 0) {
+
+                            return false; // 👍🏻 You are stopping the handling of component
+                        }
+                    }} style={{ color: 'white', backgroundColor: csvContent.length > 0 ? '#42d4ca' : 'gray' }} className="btn csv-btn" {...csvReport}>Export to CSV</CSVLink>
+
+                </div>}
             </div>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">epoch</th>
-                        <th scope="col">effectiveSlot</th>
-                        <th scope="col">amount</th>
-                        <th scope="col">date</th>
-                        <th scope='col'>SOL price</th>
-                    </tr>
-                </thead>
-                <tbody id='reward-body'>
 
-                </tbody>
-            </table>
-                {loading && <span>fetching data...</span>}
-            <div id="csv-wrap">
-
-                <CSVLink onClick={(event: any) => {
-                    if (csvContent.length == 0) {
-
-                        return false; // 👍🏻 You are stopping the handling of component
-                    }
-                }} style={{color:'white', backgroundColor: csvContent.length > 0 ? '#42d4ca' : 'gray' }} className="btn csv-btn" {...csvReport}>Export to CSV</CSVLink>
-
-            </div>
+        </div>
         </div>
     )
 }

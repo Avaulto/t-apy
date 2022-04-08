@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "solana-tools",
+    "site": "util-tools",
     "public": "build",
     "ignore": [
       "firebase.json",
