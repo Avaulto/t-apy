@@ -43,8 +43,6 @@ const btnStyle = {
 const RewardBox: FC<RewardData> = ({ reward }) => {
   useEffect(() => {
 
-    console.log(reward)
-
   })
   const [expandInfo, setexpandInfo] = useState(false)
   return (

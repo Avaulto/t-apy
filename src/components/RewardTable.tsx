@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Connection, clusterApiUrl, PublicKey, InflationReward } from '@solana/web3.js'
+import { Connection, clusterApiUrl, PublicKey, InflationReward, AccountInfo } from '@solana/web3.js'
 import 'bootstrap/dist/css/bootstrap.css';
 import { CSVLink } from "react-csv";
 
@@ -8,15 +8,15 @@ import RewardBox from './RewardBox';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import ToolGuide from './ToolGuide';
 
 const RewardTable = () => {
-    const notify = () => toast("no info on given epoch!");
+
+    const notify = (msg: string) => toast(msg);
     const [loading, setloading] = useState(false)
     const [csvContent, setcsvContent] = useState([])
     const [currentEpoch, setcurrentEpoch] = useState(0)
     const [rewards, setrewards]: Array<any> = useState([])
-
     useEffect(() => {
         new Connection(clusterApiUrl('mainnet-beta')).getEpochInfo().then(res => {
             setcurrentEpoch(res.epoch)
@@ -90,49 +90,48 @@ const RewardTable = () => {
                 reward.solPrice = solPrice;
                 csvObj.push(reward)
                 // buildForm(reward)
-                setrewards((rewards:any) => [...rewards,reward])
-                console.log(rewards.length)
+                setrewards((rewards: any) => [...rewards, reward])
                 setloading(false)
             }
             setcsvContent(csvObj);
 
         } catch (error) {
             // alert(error + '-----> no result for this epoch')
-            notify()
+            notify("no info on given epoch!")
             setloading(false)
         }
     }
     return (
         <div>
-                  
-        <span id="table-title"> SOL reward history</span>
-       <div id='sub-title'>current epoch: {currentEpoch}</div>
-        
-        
-        <div id='rewards-data' style={{ display: 'flex' }}>
 
-            <SearchBox currentEpoch={currentEpoch} fetchRewards={fetchRewards} />
-            <div id='reward-box' style={{ flex: 2, padding: '0 20px' , maxHeight:'650px', overflow:'scroll'}}>
-                {rewards.length > 0 && <h4 style={{textAlign: 'left'}}>Rewards info</h4>}
-                {rewards.map((reward:any, i: number) => (
-                   <RewardBox reward={reward} key={i} />
-                ))}
-                <ToastContainer />
-                {/* <RewardBox reward={rewards[0]}/> */}
-                {loading && <div className='loader'></div>}
-                {rewards.length > 0 &&<div id="csv-wrap">
+            <span id="table-title"> SOL reward history</span>
+            <div id='sub-title'>current epoch: {currentEpoch}</div>
+            <ToolGuide/>
 
-                    <CSVLink onClick={(event: any) => {
-                        if (csvContent.length == 0) {
+            <div id='rewards-data' style={{ display: 'flex' }}>
 
-                            return false; // 👍🏻 You are stopping the handling of component
-                        }
-                    }} style={{ color: 'white', backgroundColor: csvContent.length > 0 ? '#42d4ca' : 'gray' }} className="btn csv-btn" {...csvReport}>Export to CSV</CSVLink>
+                <SearchBox currentEpoch={currentEpoch} fetchRewards={fetchRewards} />
+                <div id='reward-box' style={{ flex: 2, padding: '0 20px', maxHeight: '650px', overflow: 'scroll' }}>
+                    {rewards.length > 0 && <h4 style={{ textAlign: 'left' }}>Rewards info</h4>}
+                    {rewards.map((reward: any, i: number) => (
+                        <RewardBox reward={reward} key={i} />
+                    ))}
+                    <ToastContainer />
+                    {/* <RewardBox reward={rewards[0]}/> */}
+                    {loading && <div className='loader'></div>}
+                    {rewards.length > 0 && <div id="csv-wrap">
 
-                </div>}
+                        <CSVLink onClick={(event: any) => {
+                            if (csvContent.length == 0) {
+
+                                return false; // 👍🏻 You are stopping the handling of component
+                            }
+                        }} style={{ color: 'white', backgroundColor: csvContent.length > 0 ? '#42d4ca' : 'gray' }} className="btn csv-btn" {...csvReport}>Export to CSV</CSVLink>
+
+                    </div>}
+                </div>
+
             </div>
-
-        </div>
         </div>
     )
 }

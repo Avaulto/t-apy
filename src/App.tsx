@@ -6,8 +6,8 @@ import RewardTable from './components/RewardTable';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import SideMenu from './components/SideMenu';
 import { environment } from './environments/environment.prod';
+import ConnectWallet from './components/ConnectWallet';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -26,7 +26,7 @@ function App() {
     <div className="App">
 
       {/* <SideMenu/> */}
-      <RewardTable/>
+      <ConnectWallet/>
                   <span id='love'>built with LOVE by <a href="https://avaulto.com" target="_blank"><img src={logo} alt='avaulto logo'/></a></span><br/>
     </div>
   );
