@@ -4,6 +4,7 @@ import Select from 'react-select'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { AccountInfo, PublicKey } from '@solana/web3.js';
 import { FaExchangeAlt } from "react-icons/fa";
+
 const searchBoxStyle = {
     flex: '1',
     background: '#ffffff61',
@@ -95,8 +96,8 @@ const SearchBox: FC<SearchBoxData> = ({ currentEpoch, fetchRewards }) => {
                 await connection.getProgramAccounts(stakeProgram, {
                     filters: [{
                         memcmp: {
-                            "offset": 12,
-                            "bytes": publicKey?.toBase58()
+                            offset: 12,
+                            bytes: publicKey?.toBase58()
                         }
                     }
                     ]
