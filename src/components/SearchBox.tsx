@@ -62,7 +62,7 @@ interface SearchBoxData {
     fetchRewards: Function;
 }
 const SearchBox: FC<SearchBoxData> = ({ currentEpoch, fetchRewards }) => {
-    const { connected, publicKey } = useWallet();
+    const { connected, publicKey }: any = useWallet();
     const { connection } = useConnection();
     const [stakeAccount, setstakeAccount]: any = useState([])
     const [useFetchBtn, setuseFetchBtn] = useState(false)
@@ -107,7 +107,7 @@ const SearchBox: FC<SearchBoxData> = ({ currentEpoch, fetchRewards }) => {
                     filters: [{
                         memcmp: {
                             "offset": 12,
-                            "bytes": publicKey?.toBase58()
+                            "bytes": publicKey.toBase58()
                         }
                     }
                     ]
