@@ -7,7 +7,7 @@ const pStyle = {
     textAlign: 'left' as const,
     fontSize: '14px',
     background: 'white',
-    padding: '20px',
+    padding: '10px 20px',
     borderRadius: '8px',
     marginBottom: '10px',
     textTransform: 'capitalize' as const
@@ -15,16 +15,22 @@ const pStyle = {
 const ToolGuide = () => {
     const [guideOpen, setguideOpen] = useState(false)
     return (
-        <div>            <div style={pStyle}>
-            this tool intend to provide a wallet history reward base on account address(not wallet address).
-            that means, when you provide a stake/vote account you will be able to fetch all staking reward history per selected epoch, with accurate APY, data history, and more.
-            <br /><br />
-            <h4 style={{ color: '#32bcd2', cursor: 'pointer' }} onClick={() => setguideOpen(!guideOpen)}>how to use:
+        <div style={pStyle}>
+              <h4 style={{ color: '#32bcd2', cursor: 'pointer' }} onClick={() => setguideOpen(!guideOpen)}>tool usage:
                 {!guideOpen && <FaBook />}
                 {guideOpen && <FaBookOpen />}
             </h4>
             {guideOpen && <span id='how-to-use'>
 
+            this tool intend to provide a wallet history reward base on account address(not wallet address).
+            that means, when you provide a stake/vote account you will be able to fetch all staking reward history per selected epoch, with accurate APY, data history, and more. <br /><br />
+            if your a validator and you want to get a reward history - put your vote account.<br />
+            if your a delegator and you want to get a reward history - put your stake account.
+            <br /><br />
+   
+            <h4 style={{ color: '#32bcd2', cursor: 'pointer' }}>how to use:
+               
+            </h4>
                 there are 2 ways to import reward history.
                 <ul>
                     <li>providing a stake/vote account address mannualy </li>
@@ -37,7 +43,8 @@ const ToolGuide = () => {
                     <li>select ending epoch</li>
                 </ol>
             </span>}
-        </div></div>
+        </div>
+
     )
 }
 

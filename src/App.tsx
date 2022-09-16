@@ -5,7 +5,7 @@ import logo from './assets/logo_white.png';
 import RewardTable from './components/RewardTable';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, logEvent } from "firebase/analytics";
 import { environment } from './environments/environment.prod';
 import ConnectWallet from './components/ConnectWallet';
 
@@ -14,11 +14,11 @@ import ConnectWallet from './components/ConnectWallet';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import Plausible from 'plausible-tracker';
 
-
-// Initialize Firebase
-const app = initializeApp(environment.firebase);
-const analytics = getAnalytics(app);
+const { trackPageview ,enableAutoPageviews } = Plausible()
+trackPageview()
+enableAutoPageviews();
 
 function App() {
 

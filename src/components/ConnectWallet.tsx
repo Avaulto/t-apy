@@ -1,16 +1,13 @@
 import React, { useCallback, useMemo } from 'react'
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base';
+import { WalletError } from '@solana/wallet-adapter-base';
 import {
     getLedgerWallet,
     getPhantomWallet,
     getSolflareWallet,
-    getSolletExtensionWallet,
-    getSolletWallet,
 } from '@solana/wallet-adapter-wallets';
 import {
     WalletModalProvider,
-    WalletDisconnectButton,
     WalletMultiButton
 } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
@@ -20,10 +17,10 @@ import RewardTable from './RewardTable';
 require('@solana/wallet-adapter-react-ui/styles.css');
 const ConnectWallet = () => {
     // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-    const network = WalletAdapterNetwork.Mainnet;
+    const network = clusterApiUrl('mainnet-beta') //WalletAdapterNetwork.Mainnet;
 
     // You can also provide a custom RPC endpoint.
-    const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+    const endpoint = useMemo(() => network, [network]);
 
     // @solana/wallet-adapter-wallets includes all the adapters but supports tree shaking and lazy loading --
     // Only the wallets you configure here will be compiled into your application, and only the dependencies
@@ -33,8 +30,8 @@ const ConnectWallet = () => {
         // getSlopeWallet(),
         getSolflareWallet(),
         getLedgerWallet(),
-        getSolletWallet({ network }),
-        getSolletExtensionWallet({ network }),
+        // getSolletWallet({ network }),
+        // getSolletExtensionWallet({ network }),
     ], [network]);
     const onError = useCallback(
         (error: WalletError) =>
@@ -42,7 +39,7 @@ const ConnectWallet = () => {
         []
     );
     return (
-        <ConnectionProvider endpoint={endpoint}>
+        <ConnectionProvider endpoint={network}>
             <WalletProvider wallets={wallets} onError={onError} autoConnect>
                 <WalletModalProvider>
                     <WalletMultiButton />

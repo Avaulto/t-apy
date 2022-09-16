@@ -25,7 +25,7 @@ const inputStyle = {
     background: 'white',
     outline: 0,
     display: 'flex',
-    flex:'1',
+    flex: '1',
     // textAlign:'center'
 }
 const accountInputWrapper = {
@@ -36,7 +36,7 @@ const accountInputWrapper = {
 const switchBtn = {
     height: '40px',
     borderRadius: '8px',
-    border:' 1px solid white',
+    border: ' 1px solid white',
     background: '#9f5fcd',
     color: 'white',
     width: '40px',
@@ -69,18 +69,29 @@ const SearchBox: FC<SearchBoxData> = ({ currentEpoch, fetchRewards }) => {
         control: () => (inputStyle)
     }
     useEffect(() => {
-        if(connected){
-            fetchAttachedStakeAccounts()
+        // connection.getEpochSchedule().then(r =>console.log(r));
+        // connection.getEpochInfo().then( async r =>{
+        //     console.log(r)
+        //     const slot = await connection.getSlot();
+        //     const blocktime = await connection.getBlockTime(slot);
+        //     const epochLong = await connection.getBlockTime(432000)
+        //     const blockheight = await connection.getBlock(slot)
+        //     console.log(slot, blockheight)
+        // });
+        
+        if (connected) {
+            setTimeout(() => {
+                fetchAttachedStakeAccounts()
+            }, 1000);
         }
     }, [connected])
-    
+
     const fetchAttachedStakeAccounts = async () => {
-        console.log('start fetch')
         setstakeAccount([])
         const stakeProgram: PublicKey = new PublicKey("Stake11111111111111111111111111111111111111");
         const voteProgram: PublicKey = new PublicKey("Vote111111111111111111111111111111111111111");
         try {
-            const fetchedAccounts: Array<{ pubkey: PublicKey; account: AccountInfo<Buffer> }> =
+            const fetchedStakeAccounts: Array<{ pubkey: PublicKey; account: AccountInfo<Buffer> }> =
                 await connection.getProgramAccounts(stakeProgram, {
                     filters: [{
                         memcmp: {
@@ -90,14 +101,25 @@ const SearchBox: FC<SearchBoxData> = ({ currentEpoch, fetchRewards }) => {
                     }
                     ]
                 })
-            fetchedAccounts.forEach((AccountInfo: { pubkey: PublicKey; account: AccountInfo<Buffer> }) => {
+            const fetchedVoteAccounts: Array<{ pubkey: PublicKey; account: AccountInfo<Buffer> }> =
+                await connection.getProgramAccounts(voteProgram, {
+                    filters: [{
+                        memcmp: {
+                            "offset": 12,
+                            "bytes": publicKey?.toBase58()
+                        }
+                    }
+                    ]
+                })
+            const fetchAccounts = fetchedStakeAccounts.concat(fetchedVoteAccounts);
+
+            fetchAccounts.forEach((AccountInfo: { pubkey: PublicKey; account: AccountInfo<Buffer> }) => {
                 // console.log(AccountInfo.pubkey.toBase58())
                 setstakeAccount((stakeAccount: any) => [...stakeAccount,
                 { value: AccountInfo.pubkey.toBase58(), label: AccountInfo.pubkey.toBase58() }
                 ])
-                console.log(stakeAccount)
             });
-            console.log(fetchedAccounts)
+
         } catch (error) {
             alert('failed to fetch attached stake account')
         }
@@ -119,16 +141,16 @@ const SearchBox: FC<SearchBoxData> = ({ currentEpoch, fetchRewards }) => {
             <div className="input-group" style={{ flexDirection: 'column', height: 'inherit', justifyContent: 'space-around' }}>
                 <div id='account-input-wrapper' style={accountInputWrapper}>
 
-                    {!useFetchBtn && <input style={inputStyle} onChange={e =>  setvoteAccount(e.target.value)} placeholder='vote/stake account' />}
+                    {!useFetchBtn && <input style={inputStyle} onChange={e => setvoteAccount(e.target.value)} placeholder='vote/stake account' />}
                     {useFetchBtn && <Select styles={customStyles} placeholder='fetched accounts' options={stakeAccount} onChange={(option: any) => setvoteAccount(option?.value)} />}
 
                     {connected &&
-                        <button style={switchBtn} onClick={() => setuseFetchBtn(!useFetchBtn)}><FaExchangeAlt/></button>
-                   
+                        <button style={switchBtn} onClick={() => setuseFetchBtn(!useFetchBtn)}><FaExchangeAlt /></button>
+
                     }
                 </div>
                 <Select styles={customStyles} placeholder='start epoch' options={calcEpochOpt()} onChange={(option: any) => setstartEpoch(option?.value)} />
-                <Select styles={customStyles} placeholder='last avaliable epoch' options={calcEpochOpt()} onChange={(option: any) => setendEpoch(option?.value)} />
+                <Select styles={customStyles} placeholder='end epoch' options={calcEpochOpt()} onChange={(option: any) => setendEpoch(option?.value)} />
                 <button type="button" style={btnStyle} onClick={() => fetchRewards(voteAccount, startEpoch, endEpoch)} className="btn">fetch reward</button>
             </div>
         </div>
