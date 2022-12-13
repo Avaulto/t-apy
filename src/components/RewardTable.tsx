@@ -9,16 +9,12 @@ import RewardBox from './RewardBox';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ToolGuide from './ToolGuide';
-import { getAnalytics, logEvent } from "firebase/analytics";
-import { initializeApp } from 'firebase/app';
 import { environment } from '../environments/environment.prod';
 import { useConnection } from '@solana/wallet-adapter-react';
 
 import Plausible from 'plausible-tracker'
 const { trackEvent } = Plausible();
 
-const app = initializeApp(environment.firebase);
-const analytics = getAnalytics(app);
 
 const RewardTable = () => {
     const { connection } = useConnection();
@@ -86,7 +82,6 @@ const RewardTable = () => {
     const fetchRewards = async (voteAccount: string, startEpoch: number, endEpoch: number) => {
         trackEvent('fetch wallet reward')
 
-        logEvent(analytics, 'fetch_data')
         // const connection = await new Connection(clusterApiUrl('mainnet-beta'))
         resetRewardState()
         const csvObj: any = []

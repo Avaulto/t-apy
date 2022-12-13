@@ -4,6 +4,7 @@ import { WalletError } from '@solana/wallet-adapter-base';
 import {
     getLedgerWallet,
     getPhantomWallet,
+    getSlopeWallet,
     getSolflareWallet,
 } from '@solana/wallet-adapter-wallets';
 import {
@@ -17,7 +18,7 @@ import RewardTable from './RewardTable';
 require('@solana/wallet-adapter-react-ui/styles.css');
 const ConnectWallet = () => {
     // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-    const network = clusterApiUrl('mainnet-beta') //WalletAdapterNetwork.Mainnet;
+    const network = 'https://mb-avaulto-cc28.mainnet.rpcpool.com/f72a3ed2-f282-4523-95a0-d4acfcd40f4d' //WalletAdapterNetwork.Mainnet;
 
     // You can also provide a custom RPC endpoint.
     const endpoint = useMemo(() => network, [network]);
@@ -27,11 +28,9 @@ const ConnectWallet = () => {
     // of wallets that your users connect to will be loaded.
     const wallets = useMemo(() => [
         getPhantomWallet(),
-        // getSlopeWallet(),
+        getSlopeWallet(),
         getSolflareWallet(),
         getLedgerWallet(),
-        // getSolletWallet({ network }),
-        // getSolletExtensionWallet({ network }),
     ], [network]);
     const onError = useCallback(
         (error: WalletError) =>

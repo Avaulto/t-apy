@@ -3,16 +3,6 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  firebaseConfig: {
-    apiKey: "AIzaSyDmXSWO04FnnBhsUJnRNRHyKtcMISBSfpo",
-    authDomain: "avaulto-v2.firebaseapp.com",
-    databaseURL: "https://avaulto-v2-default-rtdb.firebaseio.com",
-    projectId: "avaulto-v2",
-    storageBucket: "avaulto-v2.appspot.com",
-    messagingSenderId: "486710240868",
-    appId: "1:486710240868:web:ecea8290c8eecb8306e171",
-    measurementId: "G-X2CXSP41TH"
-  },
   production: false,
   api_url:''
 };
