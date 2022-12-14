@@ -70,16 +70,6 @@ const SearchBox: FC<SearchBoxData> = ({ currentEpoch, fetchRewards }) => {
         control: () => (inputStyle)
     }
     useEffect(() => {
-        // connection.getEpochSchedule().then(r =>console.log(r));
-        // connection.getEpochInfo().then( async r =>{
-        //     console.log(r)
-        //     const slot = await connection.getSlot();
-        //     const blocktime = await connection.getBlockTime(slot);
-        //     const epochLong = await connection.getBlockTime(432000)
-        //     const blockheight = await connection.getBlock(slot)
-        //     console.log(slot, blockheight)
-        // });
-        
         if (connected) {
             setTimeout(() => {
                 fetchAttachedStakeAccounts()
