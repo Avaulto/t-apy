@@ -67,7 +67,7 @@ const RewardTable = () => {
 
     const calcAPY = (reward: any) => {
         const epochAPY = isWhatPercentOf(reward.amount, reward.postBalance)
-        const averageEpoch = 2.58 // days;
+        const averageEpoch = 2.3 // days;
         const trueAPY = epochAPY / averageEpoch * 365;
         return trueAPY.toFixed(2)
     }

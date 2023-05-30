@@ -64,7 +64,7 @@ const RewardBox: FC<RewardData> = ({ reward }) => {
         </div>
         <div style={infoItem}>
           true APY:
-          <FaQuestionCircle style={{ width: '16px' }} data-tip="base on 62h epoch" />
+          <FaQuestionCircle style={{ width: '16px' }} data-tip="base on 56h epoch" />
                         
                         <ReactTooltip place="right"
                             border
