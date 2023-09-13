@@ -19,7 +19,8 @@ function App() {
       <ConnectWallet/>
       <span id="love">built with Love by <a href="https://www.SolanaHub.app" target="_blank">
         <span id="logo">SolanaHub</span>
-        <img src={logo} alt="solanhub logo"/></a></span>
+        <img src={logo} alt="solanhub logo"/></a>
+      </span>
     </div>
   );
 }
