@@ -18,7 +18,7 @@ import RewardTable from './RewardTable';
 require('@solana/wallet-adapter-react-ui/styles.css');
 const ConnectWallet = () => {
     // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-    const network = 'https://mb-avaulto-cc28.mainnet.rpcpool.com' //WalletAdapterNetwork.Mainnet;
+    const network = 'https://solana-mainnet.rpc.extrnode.com' //WalletAdapterNetwork.Mainnet;
 
     // You can also provide a custom RPC endpoint.
     const endpoint = useMemo(() => network, [network]);
