@@ -12,10 +12,6 @@ import ToolGuide from './ToolGuide';
 import { environment } from '../environments/environment.prod';
 import { useConnection } from '@solana/wallet-adapter-react';
 
-import Plausible from 'plausible-tracker'
-const { trackEvent } = Plausible();
-
-
 const RewardTable = () => {
     const { connection } = useConnection();
 
@@ -80,7 +76,6 @@ const RewardTable = () => {
         setrewards([]);
     }
     const fetchRewards = async (voteAccount: string, startEpoch: number, endEpoch: number) => {
-        trackEvent('fetch wallet reward')
 
         // const connection = await new Connection(clusterApiUrl('mainnet-beta'))
         resetRewardState()
