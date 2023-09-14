@@ -109,6 +109,7 @@ const RewardTable = () => {
             setcsvContent(csvObj);
 
         } catch (error) {
+            console.log(error)
             // alert(error + '-----> no result for this epoch')
             notify("no info on given epoch!")
             setloading(false)
