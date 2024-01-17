@@ -88,7 +88,7 @@ const RewardTable = () => {
                 setloading(true)
                 const epoch = index;
                 const rewardRes: (InflationReward | null)[] = await connection.getInflationReward([account], epoch);
-                await sleep(600)
+                await sleep(1000)
                 const reward: any = rewardRes[0];
                 // get date
                 const unixTimestamp: any = await connection.getBlockTime(reward.effectiveSlot)
